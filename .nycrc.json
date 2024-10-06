@@ -1,0 +1,14 @@
+{
+    "extensions": [
+        "ts",
+        "tsx"
+    ],
+    "reporter": [
+        "text-summary",
+        "html"
+    ],
+    "exclude": [
+        "src/utils/Exception.ts",
+        "tests/**"
+    ]
+}

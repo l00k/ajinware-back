@@ -1,0 +1,71 @@
+#!/bin/bash
+
+INSPECT=0
+WATCH=0
+
+# analyze flags
+while getopts ":i:w" opt; do
+    case $opt in
+        i)
+            INSPECT=1
+            echo "Running in inspect mode"
+            shift
+            ;;
+        w)
+            WATCH=1
+            echo "Running in watch mode"
+            shift
+            ;;
+        \?)
+            break
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument."
+            exit 1
+            ;;
+    esac
+done
+
+# next argument is the mode
+MODE=$1
+
+# the rest of the arguments are passed to node
+shift
+
+OPTIONS="--trace-deprecation --enable-source-maps"
+
+case $MODE in
+    prod)
+        if [[ $INSPECT == 1 ]]; then
+            OPTIONS="$OPTIONS --inspect --inspect-brk"
+        fi
+        NODE_OPTIONS="$OPTIONS" node "$@"
+        ;;
+    dev)
+        if [[ $INSPECT == 1 ]]; then
+            OPTIONS="$OPTIONS --inspect --inspect-brk"
+        fi
+        if [[ $WATCH == 1 ]]; then
+            echo NODE_OPTIONS="--import=./dev/import.js $OPTIONS" nodemon "$@"
+            NODE_OPTIONS="--import=./dev/import.js $OPTIONS" nodemon "$@"
+        else
+            NODE_OPTIONS="--import=./dev/import.js $OPTIONS" node "$@"
+        fi
+        ;;
+    test)
+        MOCHA_OPTIONS=""
+        if [[ $INSPECT == 1 ]]; then
+            MOCHA_OPTIONS="--node-option=inspect --node-option=inspect-brk"
+        fi
+        NODE_OPTIONS="--import=./dev/import.js $OPTIONS" node node_modules/.bin/mocha $MOCHA_OPTIONS "$@"
+        ;;
+    coverage)
+        NODE_OPTIONS="--import=./dev/import.js $OPTIONS" node node_modules/.bin/c8 node_modules/.bin/mocha "$@"
+        ;;
+    *)
+        echo "Invalid mode: $MODE"
+        exit 1
+        ;;
+esac
+
+

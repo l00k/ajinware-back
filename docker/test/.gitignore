@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.storage1/
+.storage2/
+.storage3/
+
+package.json
+yarn.lock

@@ -1,0 +1,22 @@
+{
+    "reporter": "spec",
+    "extensions": [
+        "ts",
+        "tsx"
+    ],
+    "timeout": 10000,
+    "slow": 50,
+    "enable-source-maps": true,
+    "spec": [
+        "tests/before-all.test.ts",
+        "tests/**/*.test.ts"
+    ],
+    "watch-files": [
+        "src/**",
+        "tests/**/*.test.ts"
+    ],
+    "bail": true,
+    "node-option": [
+        "enable-source-maps"
+    ]
+}

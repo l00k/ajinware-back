@@ -1,0 +1,332 @@
+{
+	"info": {
+		"_postman_id": "8ebfd00f-4938-43a9-ad76-38ff5644a3e3",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10385740"
+	},
+	"item": [
+		{
+			"name": "Create Coaster",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"pm.environment.set('coasterId', responseJson.id);",
+							"",
+							"pm.test('Should return new entity', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson['@type']).to.be.equal('Coaster');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"@type\": \"Coaster\",\n    \"id\": \"a87743f3-583c-4134-8ff7-b718f10c08d0\",\n    \"name\": \"A1\",\n    \"personelNumber\": 16,\n    \"customerNumber\": 60000,\n    \"routeLength\": 1800,\n    \"workingHourFrom\": 8,\n    \"workingHourTo\": 16\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/coasters",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"coasters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Coasters",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let coasterId = pm.environment.get('coasterId');",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"if (!coasterId) {",
+							"    coasterId = responseJson[0].id;",
+							"    pm.environment.set('coasterId', coasterId);",
+							"}",
+							"",
+							"pm.test('Should contain new entity', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"",
+							"    const coaster = responseJson.find(c => c.id == coasterId);",
+							"    pm.expect(coaster).to.be.not.undefined;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"filters\": {\n        \"personelNumber\": { \"$gte\": 16 }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/coasters",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"coasters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Coaster",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test('Should contain new entity', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson['@type']).to.be.equal('Coaster');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"@type\": \"Coaster\",\n    \"id\": \"a87743f3-583c-4134-8ff7-b718f10c08d0\",\n    \"name\": \"A1\",\n    \"personelNumber\": 16,\n    \"customerNumber\": 60000,\n    \"routeLength\": 1800,\n    \"workingHourFrom\": 8,\n    \"workingHourTo\": 16\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/coasters/:coasterId",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"coasters",
+						":coasterId"
+					],
+					"variable": [
+						{
+							"key": "coasterId",
+							"value": "{{coasterId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Coaster",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const coasterId = pm.environment.get('coasterId');",
+							"",
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test('Should contain updated entity', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson['@type']).to.be.equal('Coaster');",
+							"});",
+							"",
+							"pm.test('Should not switch \"id\"', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson.id).to.be.equal(coasterId);",
+							"});",
+							"",
+							"pm.test('Should not switch \"routeLength\"', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson.routeLength).to.be.equal(1800);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"@type\": \"Coaster\",\n    \"id\": \"abcaaaaa-583c-4134-8ff7-b718f10c08d0\", // Should not be used\n    \"name\": \"C2\",\n    \"personelNumber\": 16,\n    \"customerNumber\": 60000,\n    \"routeLength\": 3333, // Should not be used\n    \"workingHourFrom\": 8,\n    \"workingHourTo\": 15.5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/coasters/:coasterId",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"coasters",
+						":coasterId"
+					],
+					"variable": [
+						{
+							"key": "coasterId",
+							"value": "{{coasterId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create wagon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"pm.environment.set('wagonId', responseJson.id);",
+							"",
+							"pm.test('Should return new entity', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson['@type']).to.be.equal('Wagon');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"@type\": \"Wagon\",\n    \"id\": \"c8f5178d-e10f-4bcb-9fa7-1ad9d407c8a2\",\n    \"seatNumber\": 32,\n    \"speed\": 1.5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/coasters/:coasterId/wagons",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"coasters",
+						":coasterId",
+						"wagons"
+					],
+					"variable": [
+						{
+							"key": "coasterId",
+							"value": "{{coasterId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete wagon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const responseJson = pm.response.json();",
+							"",
+							"pm.test('Should return OK', () => {",
+							"    pm.expect(pm.response.code).to.be.eq(200);",
+							"    pm.expect(responseJson.result).to.be.equal('OK');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"@type\": \"Wagon\",\n    \"id\": \"c8f5178d-e10f-4bcb-9fa7-1ad9d407c8a2\",\n    \"seatNumber\": 32,\n    \"speed\": 1.5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_URL}}/coasters/:coasterId/wagons/:wagonId",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"coasters",
+						":coasterId",
+						"wagons",
+						":wagonId"
+					],
+					"variable": [
+						{
+							"key": "coasterId",
+							"value": "{{coasterId}}"
+						},
+						{
+							"key": "wagonId",
+							"value": "{{wagonId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

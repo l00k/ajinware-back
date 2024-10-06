@@ -1,0 +1,77 @@
+services:
+    redis:
+        image: redis:7.4
+        container_name: redis
+        ports:
+            - "6379:6379"
+        command: >
+            --loglevel debug
+
+    app1:
+        depends_on:
+            - redis
+        image: node:20.11
+        user: "${UID}:${GID}"
+        environment:
+            NODE_ENV: production
+            APP_ENV: dev
+            REDIS_URL: redis://redis:6379
+            PEER_ID: 'test-1'
+        ports:
+            - "3150:3050"
+        volumes:
+            - ./.storage1:/app/.storage
+            - ./dist:/app/dist
+            - ./node_modules:/app/node_modules
+            - ./package.json:/app/package.json
+            - ./yarn.lock:/app/yarn.lock
+        working_dir: '/app'
+        command: |
+            node dist/main.js
+
+    app2:
+        depends_on:
+            - redis
+            - app1
+        image: node:20.11
+        user: "${UID}:${GID}"
+        environment:
+            NODE_ENV: production
+            APP_ENV: dev
+            REDIS_URL: redis://redis:6379
+            PEER_ID: 'test-2'
+        ports:
+            - "3250:3050"
+        volumes:
+            - ./.storage2:/app/.storage
+            - ./dist:/app/dist
+            - ./node_modules:/app/node_modules
+            - ./package.json:/app/package.json
+            - ./yarn.lock:/app/yarn.lock
+        working_dir: '/app'
+        command: |
+            node dist/main.js
+
+    app3:
+        depends_on:
+            - redis
+            - app1
+            - app2
+        image: node:20.11
+        user: "${UID}:${GID}"
+        environment:
+            NODE_ENV: production
+            APP_ENV: dev
+            REDIS_URL: redis://redis:6379
+            PEER_ID: 'test-3'
+        ports:
+            - "3350:3050"
+        volumes:
+            - ./.storage3:/app/.storage
+            - ./dist:/app/dist
+            - ./node_modules:/app/node_modules
+            - ./package.json:/app/package.json
+            - ./yarn.lock:/app/yarn.lock
+        working_dir: '/app'
+        command: |
+            node dist/main.js

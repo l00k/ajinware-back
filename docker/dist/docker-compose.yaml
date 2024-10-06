@@ -1,0 +1,36 @@
+services:
+    app_dev:
+        image: node:20.11
+        network_mode: host
+        environment:
+            NODE_ENV: production
+            APP_ENV: dev
+            REDIS_URL: redis://...
+            PEER_ID: 'dev-1'
+        working_dir: '/app'
+        volumes:
+            - ./.storage:/app/.storage
+            - ./dist:/app/dist
+            - ./node_modules:/app/node_modules
+            - ./package.json:/app/package.json
+            - ./yarn.lock:/app/yarn.lock
+        command: |
+            node dist/main.js
+
+    app_prod:
+        image: node:20.11
+        network_mode: host
+        environment:
+            NODE_ENV: production
+            APP_ENV: prod
+            REDIS_URL: redis://...
+            PEER_ID: 'prod-1'
+        working_dir: '/app'
+        volumes:
+            - ./.storage:/app/.storage
+            - ./dist:/app/dist
+            - ./node_modules:/app/node_modules
+            - ./package.json:/app/package.json
+            - ./yarn.lock:/app/yarn.lock
+        command: |
+            node dist/main.js
