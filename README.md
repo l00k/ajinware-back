@@ -19,7 +19,7 @@ skrypty ułatwiające uruchamianie projektu w trybie deweloperskim.
 ```bash
 dev/run test # uruchamia testy
 dev/run coverage # uruchamia testy z pokryciem kodu
-dev/run [-w] [-i] dev # uruchamia projekt w trybie deweloperskim (bez kompilacji - wprost z TS)
+dev/run [-w] [-i] dev src/main.ts # uruchamia projekt w trybie deweloperskim (bez kompilacji - wprost z TS)
 ```
 
 ## Lokalne testowanie
